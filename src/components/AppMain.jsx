@@ -1,34 +1,36 @@
 import { useEffect, useState } from "react";
 
-export default function AppMain({ films }) {
+export default function AppMain({ movies }) {
 
-    const [filteredFilms, setFilteredFilms] = useState(films);
+    let moviesList = [...movies];
+
+    const [showedMovies, setShowedMovies] = useState(moviesList);
     const [selectedGenre, setSelectedGenre] = useState("");
     const [searchValue, setSearchValue] = useState("");
 
-    const genres = [];
-    films.filter(film => {
-        if (!genres.includes(film.genre)) {
-            genres.push(film.genre);
+    const moviesGenres = [];
+    moviesList.filter(movie => {
+        if (!moviesGenres.includes(movie.genre)) {
+            moviesGenres.push(movie.genre);
         }
     })
 
     useEffect(() => {
 
-        if (selectedGenre || searchValue != "") {
-            let actualFilms = [...films];
+        if (selectedGenre || searchValue) {
+            let filteredMovies = [...moviesList];
 
             if (selectedGenre) {
-                actualFilms = actualFilms.filter(film => film.genre === selectedGenre);
+                filteredMovies = filteredMovies.filter(film => film.genre === selectedGenre);
             }
 
             if (searchValue != "") {
-                actualFilms = actualFilms.filter(film => film.title.toLowerCase().includes(searchValue));
+                filteredMovies = filteredMovies.filter(film => film.title.toLowerCase().includes(searchValue));
             }
 
-            setFilteredFilms(actualFilms);
+            setShowedMovies(filteredMovies);
         } else {
-            setFilteredFilms(films)
+            setShowedMovies(moviesList);
         }
 
     }, [selectedGenre, searchValue])
@@ -39,9 +41,9 @@ export default function AppMain({ films }) {
                 <input type="text" value={searchValue} onChange={(e) => setSearchValue(e.target.value)} />
 
                 <select onChange={(e) => setSelectedGenre(e.target.value)}>
-                    <option value="" >Seleziona un genere</option>
+                    <option value="" >Tutti i generi</option>
                     {
-                        genres.map((genre, i) => (
+                        moviesGenres.map((genre, i) => (
                             <option key={i} value={genre} >{genre}</option>
                         ))
                     }
@@ -51,8 +53,8 @@ export default function AppMain({ films }) {
             <div className="films-list">
                 <ul>
                     {
-                        filteredFilms.map((film, i) => (
-                            <li key={i}>{film.title} - {film.genre}</li>
+                        showedMovies.map((movie, i) => (
+                            <li key={i}>{movie.title} - {movie.genre}</li>
                         ))
                     }
                 </ul>
