@@ -4,19 +4,19 @@ export default function AppMain({ films }) {
 
     const [filteredFilms, setFilteredFilms] = useState(films);
 
-    let genres = [];
+    const genres = [];
     films.filter(film => {
         if (!genres.includes(film.genre)) {
             genres.push(film.genre)
         }
     })
 
-    function selectGenre(e) {
-        const genre = e.target.value;
+    function filterByGenre(e) {
+        const selectedGenre = e.target.value;
 
-        if (genre) {
+        if (selectedGenre) {
             setFilteredFilms(
-                films.filter(film => film.genre === genre)
+                films.filter(film => film.genre === selectedGenre)
             )
         } else {
             setFilteredFilms(films)
@@ -26,7 +26,7 @@ export default function AppMain({ films }) {
     return (
         <main>
             <div className="filters">
-                <select onChange={(e) => selectGenre(e)}>
+                <select onChange={(e) => filterByGenre(e)}>
                     <option value="" >Seleziona un genere</option>
                     {
                         genres.map((genre, i) => (
