@@ -1,4 +1,8 @@
+import { useState } from "react";
+
 export default function AppMain({ films }) {
+
+    const [filteredFilms, setFilteredFilms] = useState(films);
 
     let genres = [];
     films.filter(film => {
@@ -7,13 +11,26 @@ export default function AppMain({ films }) {
         }
     })
 
+    function selectGenre(e) {
+        const genre = e.target.value;
+
+        if (genre) {
+            setFilteredFilms(
+                films.filter(film => film.genre === genre)
+            )
+        } else {
+            setFilteredFilms(films)
+        }
+    }
+
     return (
         <main>
             <div className="filters">
-                <select name="" id="">
+                <select onChange={(e) => selectGenre(e)}>
+                    <option value="" >Seleziona un genere</option>
                     {
-                        genres.map(genre => (
-                            <option value={genre}>{genre}</option>
+                        genres.map((genre, i) => (
+                            <option key={i} value={genre} >{genre}</option>
                         ))
                     }
                 </select>
@@ -22,12 +39,12 @@ export default function AppMain({ films }) {
             <div className="films-list">
                 <ul>
                     {
-                        films.map((film, i) => (
+                        filteredFilms.map((film, i) => (
                             <li key={i}>{film.title} - {film.genre}</li>
                         ))
                     }
                 </ul>
             </div>
-        </main>
+        </main >
     );
 }
