@@ -2,8 +2,7 @@ import { useEffect, useState } from "react";
 
 export default function AppMain({ movies }) {
 
-    let moviesList = [...movies];
-
+    const [moviesList, setMoviesList] = useState(movies);
     const [showedMovies, setShowedMovies] = useState(moviesList);
     const [selectedGenre, setSelectedGenre] = useState("");
     const [searchValue, setSearchValue] = useState("");
@@ -38,15 +37,17 @@ export default function AppMain({ movies }) {
             setShowedMovies(moviesList);
         }
 
-    }, [selectedGenre, searchValue])
+    }, [selectedGenre, searchValue, moviesList])
 
     function handleSubmit(e) {
         e.preventDefault();
 
         if (newTitle.length >= 3 && newGenre) {
-            moviesList = [{ title: newTitle, genre: newGenre }, ...moviesList];
+            const newList = [{ title: newTitle, genre: newGenre }, ...moviesList];
+            setMoviesList(newList);
 
-            setShowedMovies(moviesList);
+            setNewTitle("");
+            setNewGenre("");
         }
 
     }
@@ -56,13 +57,13 @@ export default function AppMain({ movies }) {
             <form onSubmit={handleSubmit}>
                 <input type="text" value={newTitle} onChange={(e) => setNewTitle(e.target.value)} />
 
-                <select onChange={(e) => setNewGenre(e.target.value)}>
-                    <option value="" >Nessun genere selezionato</option>
-                    {
-                        moviesGenres.map((genre, i) => (
-                            <option key={i} value={genre} >{genre}</option>
-                        ))
-                    }
+                <select value={newGenre} onChange={(e) => setNewGenre(e.target.value)}>
+                    <option value="" disabled>Seleziona un genere</option>
+                    {moviesGenres.map((genre, i) => (
+                        <option key={i} value={genre}>
+                            {genre}
+                        </option>
+                    ))}
                 </select>
 
                 <button type="submit">Aggiungi</button>
