@@ -4,6 +4,7 @@ export default function AppMain({ films }) {
 
     const [filteredFilms, setFilteredFilms] = useState(films);
     const [selectedGenre, setSelectedGenre] = useState("");
+    const [searchValue, setSearchValue] = useState("");
 
     const genres = [];
     films.filter(film => {
@@ -14,19 +15,29 @@ export default function AppMain({ films }) {
 
     useEffect(() => {
 
-        if (selectedGenre) {
-            setFilteredFilms(
-                films.filter(film => film.genre === selectedGenre)
-            )
+        if (selectedGenre || searchValue != "") {
+            let actualFilms = [...films];
+
+            if (selectedGenre) {
+                actualFilms = actualFilms.filter(film => film.genre === selectedGenre);
+            }
+
+            if (searchValue != "") {
+                actualFilms = actualFilms.filter(film => film.title.toLowerCase().includes(searchValue));
+            }
+
+            setFilteredFilms(actualFilms);
         } else {
-            setFilteredFilms(films);
+            setFilteredFilms(films)
         }
 
-    }, [selectedGenre])
+    }, [selectedGenre, searchValue])
 
     return (
         <main>
             <div className="filters">
+                <input type="text" value={searchValue} onChange={(e) => setSearchValue(e.target.value)} />
+
                 <select onChange={(e) => setSelectedGenre(e.target.value)}>
                     <option value="" >Seleziona un genere</option>
                     {
