@@ -1,4 +1,10 @@
 import { useEffect, useState } from "react";
+import MovieCard from "./MovieCard";
+import Select from "./Select";
+import InputRightIcon from "./InputRightIcon";
+import Button from "./Button";
+import FormSelect from "./FormSelect";
+import FormInput from "./FormInput";
 
 export default function AppMain({ movies }) {
 
@@ -75,114 +81,27 @@ export default function AppMain({ movies }) {
 
                     <h2 className="mb-3">Aggiungi un film</h2>
 
-                    {/* INPUT TITLE */}
-                    <div className="mb-3">
-                        <label htmlFor="title" className="form-label">Titolo</label>
-                        <input
-                            type="text"
-                            className="form-control"
-                            aria-describedby="titleHelp"
-                            placeholder="Avatar 2"
+                    <FormInput label={"Titolo"} value={newTitle} setValue={setNewTitle} placeholder={"Avatar 2"} help={titleHelp} />
 
-                            value={newTitle}
-                            onChange={(e) => setNewTitle(e.target.value)}
-                        />
-                        {
-                            titleHelp &&
+                    <FormSelect label={"Genere"} value={newGenre} setValue={setNewGenre} options={moviesGenres} placeholder={"Nessun genere selezionato"} help={genreHelp} />
 
-                            <small id="titleHelp" className="form-text text-danger">
-                                {titleHelp}
-                            </small>
-                        }
-                    </div>
-
-                    {/* SELECT GENRE */}
-                    <div className="mb-3">
-                        <label htmlFor="genre" className="form-label">Genere</label>
-                        <select
-                            className="form-select form-select"
-                            aria-describedby="genreHelp"
-
-                            value={newGenre}
-                            onChange={(e) => setNewGenre(e.target.value)}
-                        >
-                            <option value="" disabled>Seleziona un genere</option>
-                            {
-                                moviesGenres.map((genre, i) => (
-                                    <option key={i} value={genre}>
-                                        {genre}
-                                    </option>
-                                ))
-                            }
-
-                        </select>
-                        {
-                            genreHelp &&
-
-                            <small id="genreHelp" className="form-text text-danger">
-                                {genreHelp}
-                            </small>
-                        }
-                    </div>
-
-                    {/* SUBMIT BTN */}
-                    <button
-                        type="submit"
-                        className="btn btn-primary"
-                    >
-                        Aggiungi
-                    </button>
+                    <Button type={"submit"} style={"primary"} label={"Aggiungi"} />
                 </form>
 
                 <div className="filters d-flex flex-row gap-2">
                     <div className="input-group mb-3">
-                        <input
-                            type="text"
-                            className="form-control"
-                            placeholder="Cerca per titolo..."
-                            aria-label="searchbar"
-                            aria-describedby="basic-addon1"
-
-                            value={searchValue}
-                            onChange={(e) => setSearchValue(e.target.value)}
-                        />
-                        <span className="input-group-text" id="basic-addon1">
-                            <i className="bi bi-search"></i>
-                        </span>
+                        <InputRightIcon value={searchValue} setValue={setSearchValue} placeholder={"Cerca per titolo ..."} icon={"search"} />
                     </div>
 
                     <div className="w-50 mb-3">
-                        <select
-                            className="form-select form-select"
-                            aria-describedby="genreHelp"
-
-                            value={selectedGenre}
-                            onChange={(e) => setSelectedGenre(e.target.value)}
-                        >
-                            <option value="">Tutti i generi</option>
-                            {
-                                moviesGenres.map((genre, i) => (
-                                    <option key={i} value={genre}>
-                                        {genre}
-                                    </option>
-                                ))
-                            }
-
-                        </select>
+                        <Select value={selectedGenre} setValue={setSelectedGenre} options={moviesGenres} placeholder={"Tutti i generi"} />
                     </div>
                 </div>
 
                 <div className="movies-list row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4">
                     {
                         showedMovies.map((movie, i) => (
-                            <div key={i} className="col mb-4">
-                                <div className="card">
-                                    <div className="card-body">
-                                        <span>{movie.genre}</span>
-                                        <h3>{movie.title}</h3>
-                                    </div>
-                                </div>
-                            </div>
+                            <MovieCard key={i} title={movie.title} genre={movie.genre} />
                         ))
                     }
                 </div>
